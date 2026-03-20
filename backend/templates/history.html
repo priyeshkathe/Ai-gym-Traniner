@@ -1,0 +1,26 @@
+<h1>Chat History</h1>
+
+<ul id="history"></ul>
+
+<script>
+
+fetch("/chat-history")
+.then(res=>res.json())
+.then(data=>{
+
+const list=document.getElementById("history")
+
+data.history.forEach(c=>{
+
+const li=document.createElement("li")
+
+li.innerHTML=
+"<b>User:</b> "+c.question+"<br><b>AI:</b> "+c.response
+
+list.appendChild(li)
+
+})
+
+})
+
+</script>
