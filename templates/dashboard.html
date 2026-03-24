@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AI Gym Trainer</title>
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body class="app-body">
+
+<div class="container">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2 class="logo">AI Trainer</h2>
+
+<button class="new-chat-btn" onclick="createChat()">+ New Chat</button>
+
+<div id="chat-list" class="chat-list"></div>
+
+<a class="logout-btn" href="/logout">Logout</a>
+
+</div>
+
+
+<!-- CHAT AREA -->
+
+<div class="chat-area">
+
+<div id="messages" class="messages"></div>
+
+<div class="input-area">
+
+<input
+id="message-input"
+placeholder="Ask your AI gym trainer..."
+onkeydown="handleKey(event)"
+>
+
+<button onclick="sendMessage()">Send</button>
+
+</div>
+
+</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="/static/chat.js"></script>
+
+</body>
+</html>
