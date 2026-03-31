@@ -1,0 +1,16 @@
+# Ignore environment variables
+.env
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+# SQLite database
+*.db
+# VS Code settings
+.vscode/
+# Python virtual environment
+venv/
+# OS files
+.DS_Store
+Thumbs.db
+# Ignore temp files
+tempCodeRunnerFile.python

@@ -2,10 +2,15 @@ from flask import Flask, render_template, request, jsonify, redirect, session
 import sqlite3
 import requests
 
+
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")  # Loaded from .env, do not hardcode
 
 
 # ---------------- DATABASE ---------------- #

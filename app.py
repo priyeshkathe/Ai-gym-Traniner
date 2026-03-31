@@ -8,7 +8,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")  # Loaded from .env, do not hardcode
 
 
 # ---------------- DATABASE ---------------- #
