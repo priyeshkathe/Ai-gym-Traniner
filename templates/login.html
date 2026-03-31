@@ -1,37 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>Login</title>
-<link rel="stylesheet" href="/static/style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — AI Trainer</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body class="auth-body">
 
-<div class="auth-box">
+  <div class="auth-box">
 
-<h2>Login</h2>
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-icon">⚡</div>
+      <div class="auth-logo-text">AI <span>TRAINER</span></div>
+    </div>
 
-{% if error %}
-<div class="error">{{error}}</div>
-{% endif %}
+    <h2>Welcome Back</h2>
+    <p class="auth-subtitle">Log in to continue your fitness journey.</p>
 
-<form method="POST">
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
 
-<input name="username" placeholder="Username">
+    <form method="POST">
 
-<input name="password" type="password" placeholder="Password">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input id="username" name="username" placeholder="Enter your username" autocomplete="username">
+      </div>
 
-<button type="submit">Login</button>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password">
+      </div>
 
-</form>
+      <button type="submit">LOGIN</button>
 
-<p>Don't have account?</p>
+    </form>
 
-<a href="/register">Register</a>
+    <div class="auth-footer">
+      Don't have an account?
+      <a href="/register">Create one</a>
+    </div>
 
-</div>
+  </div>
 
 </body>
 </html>

@@ -1,37 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>Register</title>
-<link rel="stylesheet" href="/static/style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — AI Trainer</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body class="auth-body">
 
-<div class="auth-box">
+  <div class="auth-box">
 
-<h2>Create Account</h2>
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-icon">⚡</div>
+      <div class="auth-logo-text">AI <span>TRAINER</span></div>
+    </div>
 
-{% if error %}
-<div class="error">{{error}}</div>
-{% endif %}
+    <h2>Create Account</h2>
+    <p class="auth-subtitle">Start your AI-powered fitness journey today.</p>
 
-<form method="POST">
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
 
-<input name="username" placeholder="Username">
+    <form method="POST">
 
-<input name="password" type="password" placeholder="Password">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input id="username" name="username" placeholder="Choose a username" autocomplete="username">
+      </div>
 
-<button type="submit">Register</button>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Create a strong password" autocomplete="new-password">
+      </div>
 
-</form>
+      <button type="submit">CREATE ACCOUNT</button>
 
-<p>Already have account?</p>
+    </form>
 
-<a href="/">Login</a>
+    <div class="auth-footer">
+      Already have an account?
+      <a href="/">Log in</a>
+    </div>
 
-</div>
+  </div>
 
 </body>
 </html>

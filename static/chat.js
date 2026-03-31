@@ -47,7 +47,6 @@ async function loadChats(){
     })
 
 }
-
 async function openChat(id){
 
     currentChat = id
@@ -57,30 +56,13 @@ async function openChat(id){
     let msgs = await res.json()
 
     let box = document.getElementById("messages")
-
     box.innerHTML=""
 
     msgs.forEach(m=>{
-
-        if(m.role === "assistant"){
-            box.innerHTML += `
-            <div class="message assistant">
-            ${marked.parse(m.content)}
-            </div>
-            `
-        }
-        else{
-            box.innerHTML += `
-            <div class="message user">
-            ${m.content}
-            </div>
-            `
-        }
-
+        appendMessage(m.role, m.content)
     })
 
 }
-
 async function sendMessage(){
 
     let input = document.getElementById("message-input")
@@ -90,21 +72,21 @@ async function sendMessage(){
 
     input.value=""
 
-    // If no chat exists → create one automatically
+    // Show user message (right side)
+    appendMessage("user", text)
+
+    // If no chat exists → create one
     if(currentChat == null){
 
         let res = await fetch("/create_chat")
-
         let data = await res.json()
 
         currentChat = data.chat_id
-
         loadChats()
     }
 
-    let box = document.getElementById("messages")
-
-    box.innerHTML += `<div class="message user">${text}</div>`
+    // Show typing animation
+    showTypingIndicator()
 
     let res = await fetch("/chat",{
 
@@ -123,11 +105,11 @@ async function sendMessage(){
 
     let data = await res.json()
 
-    box.innerHTML += `
-    <div class="message assistant">
-    ${marked.parse(data.reply)}
-    </div>
-    `
+    // Remove typing animation
+    hideTypingIndicator()
+
+    // Show AI message (left side)
+    appendMessage("assistant", data.reply)
 }
 
 async function deleteChat(id){

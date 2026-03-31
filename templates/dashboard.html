@@ -1,54 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>AI Gym Trainer</title>
-<link rel="stylesheet" href="/static/style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Trainer</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body class="app-body">
 
-<div class="container">
+  <div class="container">
 
-<!-- SIDEBAR -->
+    <!-- ── SIDEBAR ── -->
+    <div class="sidebar">
 
-<div class="sidebar">
+      <h2 class="logo">AI TRAINER</h2>
 
-<h2 class="logo">AI Trainer</h2>
+      <button class="new-chat-btn" onclick="createChat()">+ New Chat</button>
 
-<button class="new-chat-btn" onclick="createChat()">+ New Chat</button>
+      <div class="sidebar-label">Recent Chats</div>
 
-<div id="chat-list" class="chat-list"></div>
+      <div id="chat-list" class="chat-list"></div>
 
-<a class="logout-btn" href="/logout">Logout</a>
+      <a class="logout-btn" href="/logout">Logout</a>
 
-</div>
+    </div>
 
+    <!-- ── CHAT AREA ── -->
+    <div class="chat-area">
 
-<!-- CHAT AREA -->
+      <div id="messages" class="messages">
 
-<div class="chat-area">
+        <!-- Welcome screen -->
+        <div class="welcome-screen" id="welcome-screen">
+          <div class="welcome-icon">⚡</div>
+          <h1>YOUR AI <span>TRAINER</span></h1>
+          <p>Get personalised workout plans, nutrition advice, and real-time coaching tailored to your goals.</p>
 
-<div id="messages" class="messages"></div>
+          <div class="welcome-chips">
+            <div class="welcome-chip" onclick="sendChip(this)">💪 Build muscle fast</div>
+            <div class="welcome-chip" onclick="sendChip(this)">🔥 Burn fat efficiently</div>
+            <div class="welcome-chip" onclick="sendChip(this)">🥗 Meal plan for muscle gain</div>
+            <div class="welcome-chip" onclick="sendChip(this)">🧘 Recovery & stretching tips</div>
+            <div class="welcome-chip" onclick="sendChip(this)">🏃 Cardio for beginners</div>
+            <div class="welcome-chip" onclick="sendChip(this)">📊 Track my progress</div>
+          </div>
+        </div>
 
-<div class="input-area">
+      </div>
 
-<input
-id="message-input"
-placeholder="Ask your AI gym trainer..."
-onkeydown="handleKey(event)"
->
+      <div class="input-area">
+        <input
+          id="message-input"
+          placeholder="Ask your AI gym trainer..."
+          onkeydown="handleKey(event)"
+        >
+        <button onclick="sendMessage()">SEND</button>
+      </div>
 
-<button onclick="sendMessage()">Send</button>
+    </div>
 
-</div>
+  </div>
 
-</div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="/static/chat.js"></script>
 
-</div>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="/static/chat.js"></script>
+  <script>
+    /* ── Hide welcome screen ── */
+    function hideWelcome() {
+      const w = document.getElementById('welcome-screen');
+      if (w) w.style.display = 'none';
+    }
+
+    /* ── Quick-fill from chips ── */
+    function sendChip(el) {
+      const input = document.getElementById('message-input');
+      input.value = el.textContent.replace(/^\S+\s/, '').trim();
+      input.focus();
+    }
+
+    /* ── Append a properly structured message row ──
+       role : 'user' | 'assistant'
+       content : plain text or markdown string               */
+    function appendMessage(role, content) {
+      hideWelcome();
+      const container = document.getElementById('messages');
+
+      const row = document.createElement('div');
+      row.className = 'message-row ' + role;
+
+      /* Avatar */
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.textContent = role === 'assistant' ? 'GT' : '🧑';
+
+      /* Body */
+      const body = document.createElement('div');
+      body.className = 'message-body';
+
+      const label = document.createElement('div');
+      label.className = 'message-label';
+      label.textContent = role === 'assistant' ? 'Gym Trainer' : 'You';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'message-bubble';
+
+      if (role === 'assistant' && typeof marked !== 'undefined') {
+        bubble.innerHTML = marked.parse(content);
+      } else {
+        bubble.textContent = content;
+      }
+
+      body.appendChild(label);
+      body.appendChild(bubble);
+      row.appendChild(avatar);
+      row.appendChild(body);
+
+      container.appendChild(row);
+      container.scrollTop = container.scrollHeight;
+      return row;
+    }
+
+    /* ── Typing indicator ── */
+    function showTypingIndicator() {
+      hideWelcome();
+      const container = document.getElementById('messages');
+
+      const row = document.createElement('div');
+      row.className = 'message-row assistant';
+      row.id = 'typing-indicator-row';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.textContent = 'GT';
+
+      const body = document.createElement('div');
+      body.className = 'message-body';
+
+      const label = document.createElement('div');
+      label.className = 'message-label';
+      label.textContent = 'Gym Trainer';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'message-bubble typing-indicator';
+      bubble.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>`;
+
+      body.appendChild(label);
+      body.appendChild(bubble);
+      row.appendChild(avatar);
+      row.appendChild(body);
+      container.appendChild(row);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      const el = document.getElementById('typing-indicator-row');
+      if (el) el.remove();
+    }
+
+    /* ── Build a sidebar chat-list item ──
+       Returns a DOM element. Pass into #chat-list.appendChild().
+       onSelect(chatId) called on click, onDelete(chatId) on ✕.   */
+    function createChatItem(chatId, chatName, isActive, onSelect, onDelete) {
+      const item = document.createElement('div');
+      item.className = 'chat-item' + (isActive ? ' active' : '');
+      item.dataset.chatId = chatId;
+
+      const nameEl = document.createElement('span');
+      nameEl.className = 'chat-item-label';
+      nameEl.textContent = chatName;
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'chat-item-delete';
+      delBtn.title = 'Delete chat';
+      delBtn.innerHTML = '✕';
+      delBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (typeof onDelete === 'function') onDelete(chatId);
+      };
+
+      item.appendChild(nameEl);
+      item.appendChild(delBtn);
+
+      item.addEventListener('click', () => {
+        if (typeof onSelect === 'function') onSelect(chatId);
+      });
+
+      return item;
+    }
+
+    /* ── Patch send button to also hide welcome ── */
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.querySelector('.input-area button');
+      if (btn) {
+        const orig = btn.onclick;
+        btn.onclick = function () {
+          hideWelcome();
+          if (orig) orig.call(this);
+          else if (typeof sendMessage === 'function') sendMessage();
+        };
+      }
+    });
+  </script>
 
 </body>
 </html>

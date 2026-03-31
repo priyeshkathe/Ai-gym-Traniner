@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 
 
 # ---------------- DATABASE ---------------- #
@@ -271,3 +271,4 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
